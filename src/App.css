@@ -36,3 +36,45 @@
     transform: rotate(360deg);
   }
 }
+
+.block {
+  background-color: lavender;
+}
+
+.block .entries {
+  padding-left: 5%;
+}
+
+.transactions {
+  background-color: lightgoldenrodyellow;
+}
+
+.transaction {
+  font-weight: 100;
+  padding-left: 5%;
+}
+
+.transaction .entries {
+  display: none;
+}
+
+.active .entries {
+  display: block;
+  background-color: lightgray;
+}
+
+p {
+  margin: 0;
+}
+
+.key {
+  font-weight: 600;
+}
+
+.value {
+  font-weight: 100;
+}
+
+h3 {
+  margin: 1% 0 0.5% 0;
+}

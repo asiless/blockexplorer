@@ -11,7 +11,6 @@ const settings = {
   network: Network.ETH_MAINNET,
 };
 
-
 // In this week's lessons we used ethers.js. Here we are using the
 // Alchemy SDK is an umbrella library with several different packages.
 //
@@ -19,18 +18,64 @@ const settings = {
 //   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
 const alchemy = new Alchemy(settings);
 
+
 function App() {
   const [blockNumber, setBlockNumber] = useState();
+  const [block, setBlock] = useState({ transactions:[]});
+  const replacer = (k,v) => k=='transactions'?undefined:v;
 
   useEffect(() => {
     async function getBlockNumber() {
-      setBlockNumber(await alchemy.core.getBlockNumber());
-    }
+      let number = await alchemy.core.getBlockNumber()
+      setBlockNumber(number);
+      let last =await alchemy.core.getBlockWithTransactions(blockNumber);
+      setBlock(last);
+    }    
 
     getBlockNumber();
   });
 
-  return <div className="App">Block Number: {blockNumber}</div>;
+  const handleClick = function(event) {
+    event.currentTarget.classList.toggle('active');
+  }  
+
+  return (
+    <div>
+      <h2 className="App">Block Number: {blockNumber}</h2>
+      <div className='block'>
+        <h3>block:</h3>
+        <div className="entries">
+        {
+          Object.keys(block).filter(replacer).map((key, i) => (
+          <p key={i}>
+            <span className='key'>{key}:</span>
+            <span className='value'>{JSON.stringify(block[key], null, 4)}</span>
+          </p>
+          ))
+        }
+        </div>
+      </div>     
+      <div className='transactions'>
+        <h3>transactions:</h3>
+        {
+          block.transactions.map((t, i) => (
+          <div className="transaction" onClick={handleClick} key={i}>{t.hash}
+            <div className="entries">
+            {
+              Object.keys(t).filter( k => t[k] && k != 'wait').map((key, i) => (
+                <p key={i}>
+                  <span className='key'>{key}:</span>
+                  <span className='value'>{JSON.stringify(t[key], null, 4)}</span>
+                </p>
+              ))
+            }
+            </div>
+          </div>
+          ))
+        }
+      </div>      
+    </div>
+  );
 }
 
 export default App;
