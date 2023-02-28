@@ -81,7 +81,7 @@ function App() {
 
   return (
     <div>
-      <h2 className="App">Last Block: {blockNumber}</h2>
+      <h2>Last Block: {blockNumber}</h2>
       <div className='block'>
         <h3>block:</h3>
         <div className="entries">
@@ -142,20 +142,19 @@ function Addresses() {
   }
 
   return (
-    <form>
-    <div>
+    <div className='addresses'>
       <h2>Addresses</h2>
+      <form>
+        <label>Enter the address:
+          <input
+            type="text" 
+            value={address}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        </label>
+      </form>
+      <span>{balance} eth</span>
     </div>
-      <label>Enter the address:
-        <input
-          type="text" 
-          value={address}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      </label>
-      <br/>
-      <span>{balance}</span>
-    </form>
   )
 }
 
