@@ -1,7 +1,47 @@
-import { Alchemy, Network } from 'alchemy-sdk';
+import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
-
 import './App.css';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
+// This site has 3 pages, all of which are rendered
+// dynamically in the browser (not server rendered).
+//
+// Although the page does not ever refresh, notice how
+// React Router keeps the URL up to date as you navigate
+// through the site. This preserves the browser history,
+// making sure things like the back button and bookmarks
+// work properly.
+
+function Navigator() {
+  return (
+    <Router>
+      <div className='navigator'>
+        <Link to="/">Last Block</Link>
+        <Link to="/blocks">Blocks</Link>
+        <Link to="/addresses">Addresses</Link>
+        <Switch>
+          <Route exact path="/">
+            <App />
+          </Route>
+          <Route path="/blocks">
+            <Blocks />
+          </Route>
+          <Route path="/addresses">
+            <Addresses />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
+}
+
+
 
 // Refer to the README doc for more information about using API
 // keys in client-side code. You should never do this in production
@@ -41,7 +81,7 @@ function App() {
 
   return (
     <div>
-      <h2 className="App">Block Number: {blockNumber}</h2>
+      <h2 className="App">Last Block: {blockNumber}</h2>
       <div className='block'>
         <h3>block:</h3>
         <div className="entries">
@@ -78,4 +118,45 @@ function App() {
   );
 }
 
-export default App;
+function Blocks() {
+  return (
+    <div>
+      <h2>Blocks</h2>
+    </div>
+  );
+}
+
+function Addresses() {
+
+  const [address, setAddress] = useState("");
+  const [balance, setBalance] = useState(0);
+
+  async function onChange(value) {
+    console.log('VALUE =>', value);
+    setAddress(value);
+    let b = await alchemy.core.getBalance(value, 'latest');
+    console.log('BALANCE =>', b);
+    let n = Utils.formatEther(b);
+    setBalance(n);  
+    console.log('ETH =>', n);
+  }
+
+  return (
+    <form>
+    <div>
+      <h2>Addresses</h2>
+    </div>
+      <label>Enter the address:
+        <input
+          type="text" 
+          value={address}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </label>
+      <br/>
+      <span>{balance}</span>
+    </form>
+  )
+}
+
+export default Navigator;

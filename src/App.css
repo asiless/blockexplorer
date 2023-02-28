@@ -37,6 +37,10 @@
   }
 }
 
+.navigator a {
+  padding-right: 0.5%;
+}
+
 .block {
   background-color: lavender;
 }
