@@ -29,6 +29,6 @@ export async function getBalance(value) {
     let b = await alchemy.core.getBalance(value, 'latest');
     console.log('BALANCE =>', b);
     let n = Utils.formatEther(b);
-    setBalance(n);
     console.log('ETH =>', n);
+    return n;
 }
