@@ -1,7 +1,7 @@
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import './App.css';
-import {getLastBlock, getBalance} from './blocks';
+import {getLastBlock, getBalance, getBlock} from './blocks';
 
 import {
   BrowserRouter as Router,
@@ -24,14 +24,10 @@ export function Navigator() {
     <Router>
       <div className='navigator'>
         <Link to="/">Last Block</Link>
-        <Link to="/blocks">Blocks</Link>
         <Link to="/addresses">Addresses</Link>
         <Switch>
           <Route exact path="/">
             <LastBlock />
-          </Route>
-          <Route path="/blocks">
-            <Blocks />
           </Route>
           <Route path="/addresses">
             <Addresses />
@@ -43,15 +39,12 @@ export function Navigator() {
 }
 
 export function LastBlock() {
-  const [blockNumber, setBlockNumber] = useState();
   const [block, setBlock] = useState({ transactions:[]});
   const replacer = (k) => k!=='transactions';
   
 
   useEffect(() => {
-    getLastBlock().then( res => {
-      const [n, last] = res;
-      setBlockNumber(n);
+    getBlock(null).then( last => {
       setBlock(last);
   })}, []);
 
@@ -59,17 +52,24 @@ export function LastBlock() {
     event.currentTarget.classList.toggle('active');
   }  
 
+  const navigateBlock = function(event) {
+    getBlock(event.currentTarget.id).then(b=>setBlock(b));
+  }
+
   return (
     <div>
-      <h2>Last Block: {blockNumber}</h2>
+      <h2>Last Block: {block.number}</h2>
       <div className='block'>
         <h3>block:</h3>
         <div className="entries">
         {
-          Object.keys(block).filter(replacer).map((key, i) => (
+          Object.keys(block).filter(replacer).map((key, i) => 
+          (
           <p key={i}>
             <span className='key'>{key}:</span>
-            <span className='value'>{JSON.stringify(block[key], null, 4)}</span>
+            {
+              key==='parentHash'?(<a className='value' href='#' onClick={navigateBlock} id={block[key]}>{JSON.stringify(block[key], null, 4)}</a>):(<span className='value'>{JSON.stringify(block[key], null, 4)}</span>)
+            }
           </p>
           ))
         }
@@ -94,14 +94,6 @@ export function LastBlock() {
           ))
         }
       </div>      
-    </div>
-  );
-}
-
-export function Blocks() {
-  return (
-    <div>
-      <h2>Blocks</h2>
     </div>
   );
 }

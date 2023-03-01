@@ -1,15 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import {Navigator, Addresses, Blocks, LastBlock} from './App';
+import {Navigator, Addresses, LastBlock} from './App';
 import {getLastBlock, getBalance} from './blocks';
 
 jest.mock('./blocks', () => ({ getLastBlock: jest.fn()}))
-
-it('renders Blocks', () => {
-  render(<Blocks />);
-  //const linkElement = screen.getByText(/learn react/i);
-  //expect(linkElement).toBeInTheDocument();
-});
-
 
 it('renders Address', () => {
   render(<Addresses />);

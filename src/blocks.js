@@ -17,10 +17,16 @@ const settings = {
   
 
 
-export async function getLastBlock() {
-    let number = await alchemy.core.getBlockNumber();
-    let last = await alchemy.core.getBlockWithTransactions(number);
-    return [number, last];
+export async function getBlock(hash) {
+    console.log('HASH', hash)
+
+    if(hash == null) {
+        hash = 'latest';
+    }
+
+    let block =  await alchemy.core.getBlockWithTransactions(hash);
+    console.log('BLOCK', hash, block)
+    return block;
 }
 
 
