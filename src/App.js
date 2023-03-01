@@ -1,6 +1,7 @@
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import './App.css';
+import {getLastBlock, getBalance} from './blocks';
 
 import {
   BrowserRouter as Router,
@@ -18,7 +19,7 @@ import {
 // making sure things like the back button and bookmarks
 // work properly.
 
-function Navigator() {
+export function Navigator() {
   return (
     <Router>
       <div className='navigator'>
@@ -27,7 +28,7 @@ function Navigator() {
         <Link to="/addresses">Addresses</Link>
         <Switch>
           <Route exact path="/">
-            <App />
+            <LastBlock />
           </Route>
           <Route path="/blocks">
             <Blocks />
@@ -41,39 +42,18 @@ function Navigator() {
   );
 }
 
-
-
-// Refer to the README doc for more information about using API
-// keys in client-side code. You should never do this in production
-// level code.
-const settings = {
-  apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
-  network: Network.ETH_MAINNET,
-};
-
-// In this week's lessons we used ethers.js. Here we are using the
-// Alchemy SDK is an umbrella library with several different packages.
-//
-// You can read more about the packages here:
-//   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
-const alchemy = new Alchemy(settings);
-
-
-function App() {
+export function LastBlock() {
   const [blockNumber, setBlockNumber] = useState();
   const [block, setBlock] = useState({ transactions:[]});
-  const replacer = (k,v) => k=='transactions'?undefined:v;
+  const replacer = (k) => k!=='transactions';
+  
 
   useEffect(() => {
-    async function getBlockNumber() {
-      let number = await alchemy.core.getBlockNumber()
-      setBlockNumber(number);
-      let last =await alchemy.core.getBlockWithTransactions(blockNumber);
+    getLastBlock().then( res => {
+      const [n, last] = res;
+      setBlockNumber(n);
       setBlock(last);
-    }    
-
-    getBlockNumber();
-  });
+  })}, []);
 
   const handleClick = function(event) {
     event.currentTarget.classList.toggle('active');
@@ -118,7 +98,7 @@ function App() {
   );
 }
 
-function Blocks() {
+export function Blocks() {
   return (
     <div>
       <h2>Blocks</h2>
@@ -126,19 +106,15 @@ function Blocks() {
   );
 }
 
-function Addresses() {
+export function Addresses() {
 
   const [address, setAddress] = useState("");
   const [balance, setBalance] = useState(0);
 
   async function onChange(value) {
-    console.log('VALUE =>', value);
     setAddress(value);
-    let b = await alchemy.core.getBalance(value, 'latest');
-    console.log('BALANCE =>', b);
-    let n = Utils.formatEther(b);
-    setBalance(n);  
-    console.log('ETH =>', n);
+    let b = await getBalance(value);
+    setBalance(b);  
   }
 
   return (
@@ -157,5 +133,3 @@ function Addresses() {
     </div>
   )
 }
-
-export default Navigator;
