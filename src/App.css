@@ -71,9 +71,17 @@ body {
 }
 
 .transaction .entries{
-  padding-left: 5%;
   background-color: lightgrey;
+  width: 100%;
+  float: left;
 }
+
+.transaction .receipt{
+  background-color: lightblue;
+  width: 100%;
+  float: left;
+}
+
 
 p {
   margin: 0;
