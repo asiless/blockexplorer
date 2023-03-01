@@ -37,6 +37,10 @@
   }
 }
 
+body {
+  overflow-anchor: none;
+}
+
 .navigator a {
   padding: 0 0.5% 0 0.5%;
 }
@@ -51,6 +55,14 @@
 
 .transactions {
   background-color: lightgoldenrodyellow;
+  list-style-type: none;
+}
+
+.transactions ul {
+  background-color: lightgoldenrodyellow;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .transaction {
@@ -58,13 +70,9 @@
   padding-left: 5%;
 }
 
-.transaction .entries {
-  display: none;
-}
-
-.active .entries {
-  display: block;
-  background-color: lightgray;
+.transaction .entries{
+  padding-left: 5%;
+  background-color: lightgrey;
 }
 
 p {

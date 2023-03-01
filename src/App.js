@@ -1,7 +1,7 @@
-import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 import './App.css';
-import {getLastBlock, getBalance, getBlock} from './blocks';
+import {getBalance, getBlock} from './blocks';
+import {Transaction} from './Transaction';
 
 import {
   BrowserRouter as Router,
@@ -48,10 +48,6 @@ export function LastBlock() {
       setBlock(last);
   })}, []);
 
-  const handleClick = function(event) {
-    event.currentTarget.classList.toggle('active');
-  }  
-
   const navigateBlock = function(event) {
     getBlock(event.currentTarget.id).then(b=>setBlock(b));
   }
@@ -77,22 +73,11 @@ export function LastBlock() {
       </div>     
       <div className='transactions'>
         <h3>transactions:</h3>
+          <ul>
         {
-          block.transactions.map((t, i) => (
-          <div className="transaction" onClick={handleClick} key={i}>{t.hash}
-            <div className="entries">
-            {
-              Object.keys(t).filter( k => t[k] && k != 'wait').map((key, i) => (
-                <p key={i}>
-                  <span className='key'>{key}:</span>
-                  <span className='value'>{JSON.stringify(t[key], null, 4)}</span>
-                </p>
-              ))
-            }
-            </div>
-          </div>
-          ))
+          block.transactions.map((t,i) => (<Transaction transaction={t} key={i}/>))
         }
+          </ul>
       </div>      
     </div>
   );

@@ -29,6 +29,17 @@ export async function getBlock(hash) {
     return block;
 }
 
+export async function getReceipt(hash) {
+    console.log('HASH', hash)
+
+    if(hash == null) {
+        hash = 'latest';
+    }
+
+    let receipt =  await alchemy.core.getTransactionReceipt(hash);
+    console.log('BLOCK', hash, receipt)
+    return receipt;
+}
 
 export async function getBalance(value) {
     console.log('VALUE =>', value);
